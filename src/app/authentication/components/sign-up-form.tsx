@@ -16,8 +16,7 @@ const formSchema = z.object({
     return data.password !== data.passwordConfirmation, {
         message: "Passwords don't match",
     }
-})
-
+});
 
 const SignUpForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -103,13 +102,13 @@ const SignUpForm = () => {
                         </CardContent>
 
                         <CardFooter>
-                            <Button className="" type="submit">Sign Up</Button>
+                            <Button type="submit">Sign Up</Button>
                         </CardFooter>
                     </form>
                 </Form>
             </Card>
         </>
     )
-}
+};
 
 export default SignUpForm
