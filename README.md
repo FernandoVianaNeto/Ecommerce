@@ -1,6 +1,6 @@
 # 🛍️ E-Commerce Platform
 
-A modern and fully responsive e-commerce web application built with **Next.js**, **React**, **Node.js**, and **TypeScript**.  
+A modern and fully responsive e-commerce web application built with **Next.js**, **React**, **Node.js**, **TypeScript** and **Stripe** for payment checkout.  
 It provides a seamless shopping experience with secure authentication, smooth checkout, and mobile-friendly design.
 
 ## ✨ Features
