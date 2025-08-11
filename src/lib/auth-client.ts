@@ -1,6 +1,3 @@
-import { toNodeHandler } from "better-auth/node"
-import { auth } from "@/lib/auth"
- 
-export const config = { api: { bodyParser: false } }
- 
-export default toNodeHandler(auth.handler)
+import { createAuthClient } from "better-auth/react"; // make sure to import from better-auth/react
+
+export const authClient = createAuthClient({});

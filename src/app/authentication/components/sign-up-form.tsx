@@ -6,6 +6,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { authClient } from '@/lib/auth-client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
@@ -19,6 +22,7 @@ const formSchema = z.object({
 });
 
 const SignUpForm = () => {
+    const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues:{
@@ -29,9 +33,22 @@ const SignUpForm = () => {
         }
     })
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
-        console.log(data);
-        // Handle sign-in logic here
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const { data, error }  = await authClient.signUp.email({
+                email: values.email,
+                name: values.name,
+                password: values.password,
+                fetchOptions: {
+                    onSuccess: () => {
+                        router.push('/')
+                    },
+                    onError: (error) => {
+                        toast.error(error.error.message || 'An error occurred during sign up.');
+                    }
+                }
+            });
+        } catch (error) {}
     }
     
     return (
