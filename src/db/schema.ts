@@ -80,7 +80,7 @@ export const productVariantTable = pgTable("product", {
     imageUrl: text().notNull(),
     color: text().notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    priceInCents: integer("price_in_cents").notNull(), // price in cents
+    priceInCents: integer("price_in_cents").notNull(),
 });
 
 export const productRelations = relations(productTable, (params) => {
