@@ -13,21 +13,21 @@ interface CategoryPageProps {
 }
 
 const CategoryPage = async ({ params }: CategoryPageProps) => {
-    const { slug } = await params;
-    const category = await db.query.categoryTable.findFirst({
-        where: eq(categoryTable.slug, slug),
-    });
+  const { slug } = await params;
+  const category = await db.query.categoryTable.findFirst({
+    where: eq(categoryTable.slug, slug),
+  });
 
-    if (!category) {
-        notFound();
+  if (!category) {
+    notFound();
+  }
+
+  const products = await db.query.productTable.findMany({
+    where: eq(productTable.categoryId, category.id),
+    with: {
+      variants: true,
     }
-
-    const products = await db.query.productTable.findMany({
-        where: eq(productTable.categoryId, category.id),
-        with: {
-            variants: true,
-        }
-    });
+  });
 
   return (
     <div>

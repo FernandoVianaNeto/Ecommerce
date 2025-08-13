@@ -49,7 +49,6 @@ export const verificationTable = pgTable("verification", {
     updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date())
 });
 
-
 export const categoryTable = pgTable("category", {
     id: uuid().primaryKey().defaultRandom(),
     name: text().notNull(),
@@ -68,7 +67,7 @@ export const productTable = pgTable("product_variant", {
     name: text().notNull(),
     slug: text().notNull().unique(),
     description: text().notNull(),
-    categoryId: uuid("category_id").references(() => categoryTable.id, { onDelete: 'set null' }),
+    categoryId: uuid("category_id").references(() => categoryTable.id, { onDelete: 'set null' }).notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -95,7 +94,7 @@ export const productRelations = relations(productTable, (params) => {
 
 export const productVariantRelations = relations(productVariantTable, (params) => {
     return {
-        productId: params.one(productTable, {
+        product: params.one(productTable, {
             fields: [productVariantTable.productId],
             references: [productTable.id],
         }),
