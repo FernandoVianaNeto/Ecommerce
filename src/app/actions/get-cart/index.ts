@@ -1,0 +1,41 @@
+"use server";
+
+import { db } from "@/db";
+import { cartTable } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
+export const getCart = async () => {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session?.user) {
+        throw new Error("unauthorized");
+    }
+
+    const cart = await db.query.cartTable.findFirst({
+        where: (cart, { eq }) => eq(cart.userId, session.user.id),
+        with: {
+            cartItem: {
+                with: {
+                    productVariant: true,
+                }
+            }
+        }
+    });
+
+    if (!cart) {
+        const newCart = await db.insert(cartTable).values({
+            userId: session?.user.id
+        })
+        .returning();
+
+        return {...newCart, cartItem: [], totalPriceInCents: 0}
+    }
+
+    return {...cart, totalPriceInCents: cart.cartItem.reduce(
+        (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
+        0,
+    )}
+}
