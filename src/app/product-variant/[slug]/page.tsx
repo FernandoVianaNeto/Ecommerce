@@ -7,6 +7,7 @@ import { formatCentsToBRL } from "@/helpers/money";
 import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import VariantsSelector from "./components/variants-selector";
 
 interface ProductVariantPageProps {
   params: Promise<{
@@ -20,7 +21,11 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
   const productVariant = await db.query.productVariantTable.findFirst({
       where: eq(productVariantTable.slug, slug),
       with: {
-        product: true,
+        product: {
+          with: {
+            variants: true,
+          }
+        },
       }
   });
 
@@ -48,7 +53,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
           />
         </div>
 
-        <div className="px-5"></div>
+        <VariantsSelector variants={productVariant.product.variants} variantSelected={slug}/>
 
         <div className="px-5"></div>
 
@@ -69,7 +74,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         
       </div>
 
-      <div className="">
+      <div>
           <ProductList 
             title="You may like"
             products={likelyProducts as any}
