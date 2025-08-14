@@ -1,18 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { ShoppingBasketIcon } from "lucide-react";
-import { getCart } from "@/app/actions/get-cart";
 import CartItem from "./cart-item";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { formatCentsToBRL } from "@/helpers/money";
+import { useCart } from "@/hooks/queries/use-cart";
 
 const Cart = () => {
-    const { data: cart, isPending: cartIsLoading } = useQuery({
-        queryKey: ["cart"],
-        queryFn: () => getCart(),
-    });
+    const { data: cart } = useCart();
 
     return (
         <Sheet>
