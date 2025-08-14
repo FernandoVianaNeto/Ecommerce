@@ -1,7 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, text, uuid, foreignKey, timestamp, boolean } from "drizzle-orm/pg-core";
-
-
+import { integer, pgTable, text, uuid, timestamp, boolean } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
     id: text('id').primaryKey(),
@@ -49,7 +47,6 @@ export const verificationTable = pgTable("verification", {
     updatedAt: timestamp('updated_at').$defaultFn(() => /* @__PURE__ */ new Date())
 });
 
-
 export const categoryTable = pgTable("category", {
     id: uuid().primaryKey().defaultRandom(),
     name: text().notNull(),
@@ -57,18 +54,12 @@ export const categoryTable = pgTable("category", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const categoryRelations = relations(categoryTable, (params) => {
-    return {
-        products: params.many(productTable),
-    }
-});
-
 export const productTable = pgTable("product_variant", {
     id: uuid().primaryKey().defaultRandom(),
     name: text().notNull(),
     slug: text().notNull().unique(),
     description: text().notNull(),
-    categoryId: uuid("category_id").references(() => categoryTable.id, { onDelete: 'set null' }),
+    categoryId: uuid("category_id").references(() => categoryTable.id, { onDelete: 'set null' }).notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -83,6 +74,20 @@ export const productVariantTable = pgTable("product", {
     priceInCents: integer("price_in_cents").notNull(),
 });
 
+export const shippingAddressTable = pgTable("shipping_address", {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: text("user_id").notNull().references(()=> userTable.id, { onDelete: "cascade" }),
+    recipientName: text("recipient_name").notNull(),
+    street: text().notNull(),
+    number: text().notNull(),
+    complement: text(),
+    neighborhood: text().notNull(),
+    zipCode: text("zip_code").notNull(),
+    email: text().notNull(),
+    cpfOrCnpj: text("cpf_or_cnpj").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const productRelations = relations(productTable, (params) => {
     return {
         categoryId: params.one(categoryTable, {
@@ -95,9 +100,30 @@ export const productRelations = relations(productTable, (params) => {
 
 export const productVariantRelations = relations(productVariantTable, (params) => {
     return {
-        productId: params.one(productTable, {
+        product: params.one(productTable, {
             fields: [productVariantTable.productId],
             references: [productTable.id],
         }),
+    }
+});
+
+export const categoryRelations = relations(categoryTable, (params) => {
+    return {
+        products: params.many(productTable),
+    }
+});
+
+export const addressRelations = relations(shippingAddressTable, (params) => {
+    return {
+        user: params.one(userTable, {
+            fields: [shippingAddressTable.userId],
+            references: [userTable.id]
+        }),
+    }
+});
+
+export const userRelations = relations(userTable, (params) => {
+    return {
+        shippingAddress: params.many(shippingAddressTable),
     }
 });

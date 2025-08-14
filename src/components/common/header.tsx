@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { LogInIcon, LogOut, LogOutIcon, MenuIcon } from "lucide-react";
+import { LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
+import Cart from "./cart";
 
 const Header = () => {
     const { data: session } = authClient.useSession();
@@ -17,7 +18,8 @@ const Header = () => {
                 <Image src="/logo.svg" alt="bewear logo" className="h-8 w-auto" width={100} height={26.14}/>
             </Link>
 
-            <div className="flex item center">
+            <div className="flex item center gap-4">
+                <Cart />
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="outline" size="icon">
