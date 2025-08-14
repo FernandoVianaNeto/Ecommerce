@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { ShoppingBasketIcon } from "lucide-react";
 import { getCart } from "@/app/actions/get-cart";
-import Image from "next/image";
+import CartItem from "./cart-item";
 
 const Cart = () => {
     const { data: cart, isPending: cartIsLoading } = useQuery({
@@ -13,7 +13,7 @@ const Cart = () => {
 
     return (
         <Sheet>
-        <SheetTrigger>
+        <SheetTrigger asChild>
             <Button size="icon">
             <ShoppingBasketIcon />
             </Button>
@@ -21,15 +21,18 @@ const Cart = () => {
         <SheetContent>
             <SheetHeader>
                 <SheetTitle>Cart</SheetTitle>
-                <div>
+                <div className="space-y-4 px-5">
                     {cartIsLoading && <div>Loading... </div>}
                     {cart?.cartItem.map((item) => {
                         return (
-                            <Image 
-                                src={item.productVariant?.imageUrl as string}
-                                alt={item.productVariant?.name as string}
-                                width={100}
-                                height={100}
+                            <CartItem 
+                                key={item.id}
+                                id={item.id}
+                                productName={item.productVariant?.name as string}
+                                productVariantImageUrl={item.productVariant?.imageUrl as string}
+                                productVariantName={item.productVariant?.name as string}
+                                productVariantTotalPriceInCents={item.productVariant?.priceInCents as number}
+                                quantity={item.quantity as number}
                             />
                         )
                     })}

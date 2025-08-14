@@ -13,16 +13,16 @@ const ProductActions = ({ productVariantId }: ProductActionsProps) => {
     const [quantity, setQuantity] = useState(1);
 
     return (
-        <>
+        <div className="space-y-6">
             <div className="space-y-4">
                 <h1>Quantity</h1>
                 <div className="flex w-[100px] items-center border justify-between rounded-lg">
                     <Button variant="outline" size="icon" onClick={() => setQuantity((prev) => prev > 0 ? prev - 1 : prev)}>
-                    <Minus />
+                        <Minus />
                     </Button>
                     <span>{quantity}</span>
                     <Button variant="outline" size="icon" onClick={() => setQuantity((prev) => prev + 1)}>
-                    <Plus />
+                        <Plus />
                     </Button>
                 </div>
             </div>
@@ -30,7 +30,7 @@ const ProductActions = ({ productVariantId }: ProductActionsProps) => {
                 <Button className="rounded-full" size="lg" variant="outline">Buy now</Button>
                 <AddToCartButton productVariantId={productVariantId} quantity={quantity}/>
             </div>
-        </>
+        </div>
     )
 }
 
