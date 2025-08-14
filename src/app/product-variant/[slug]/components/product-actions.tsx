@@ -1,0 +1,37 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import AddToCartButton from "./add-to-cart-button";
+import { Minus, Plus } from "lucide-react";
+import { useState } from "react";
+
+interface ProductActionsProps {
+    productVariantId: string;
+}
+
+const ProductActions = ({ productVariantId }: ProductActionsProps) => {
+    const [quantity, setQuantity] = useState(1);
+
+    return (
+        <>
+            <div className="space-y-4">
+                <h1>Quantity</h1>
+                <div className="flex w-[100px] items-center border justify-between rounded-lg">
+                    <Button variant="outline" size="icon" onClick={() => setQuantity((prev) => prev > 0 ? prev - 1 : prev)}>
+                    <Minus />
+                    </Button>
+                    <span>{quantity}</span>
+                    <Button variant="outline" size="icon" onClick={() => setQuantity((prev) => prev + 1)}>
+                    <Plus />
+                    </Button>
+                </div>
+            </div>
+            <div className="space-y-4 flex flex-col">
+                <Button className="rounded-full" size="lg" variant="outline">Buy now</Button>
+                <AddToCartButton productVariantId={productVariantId} quantity={quantity}/>
+            </div>
+        </>
+    )
+}
+
+export default ProductActions;
