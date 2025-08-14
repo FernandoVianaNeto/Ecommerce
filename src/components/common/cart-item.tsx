@@ -2,6 +2,9 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Minus, Plus, TrashIcon } from "lucide-react";
 import { formatCentsToBRL } from "@/helpers/money";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { removeProductFromCart } from "@/app/actions/remove-cart-product";
+import { toast } from "sonner";
 
 interface CartItemProps {
     id: string;
@@ -20,6 +23,20 @@ const CartItem = ({
     productVariantTotalPriceInCents,
     quantity
 }: CartItemProps) => {
+    const queryClient = useQueryClient();
+
+    const removeProductFromCartMutation = useMutation({
+        mutationKey: ["remove-cart-product"],
+        mutationFn: () => removeProductFromCart({ cartItemId: id }),
+        onSuccess: () => {
+            toast.success("Product removed successfully");
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
+        },
+        onError: () => {
+            toast.error("Error on product deletion")
+        }
+    })
+
     return (
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -49,7 +66,7 @@ const CartItem = ({
                
             </div>
             <div className="flex flex-col items-center justify-center gap-2">
-                <Button variant="outline" size="icon"><TrashIcon /></Button>
+                <Button variant="outline" size="icon" onClick={() => removeProductFromCartMutation.mutate()}><TrashIcon /></Button>
                 <p className="text-sm font-bold">
                     {formatCentsToBRL(productVariantTotalPriceInCents)}
                 </p>
