@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import VariantsSelector from "./components/variants-selector";
+import QuantitySelector from "./components/quantity-selector";
 
 interface ProductVariantPageProps {
   params: Promise<{
@@ -49,13 +50,11 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
             src={productVariant.imageUrl}
             alt={productVariant.name}
             fill
-            className="object-cover"
+            className="object-cover rounded-xl"
           />
         </div>
 
         <VariantsSelector variants={productVariant.product.variants} variantSelected={slug}/>
-
-        <div className="px-5"></div>
 
         <h3 className="text-lg font-semibold">{productVariant.product.name}</h3>
 
@@ -63,7 +62,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
         <h3 className="text-muted-foreground text-sm">{formatCentsToBRL(productVariant.priceInCents)}</h3>
 
-        <div className="px-5"></div>
+        <QuantitySelector />
 
         <div className="space-y-4 flex flex-col">
           <Button className="rounded-full" size="lg" variant="outline">Buy now</Button>
