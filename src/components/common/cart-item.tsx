@@ -2,6 +2,9 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Minus, Plus, TrashIcon } from "lucide-react";
 import { formatCentsToBRL } from "@/helpers/money";
+import { useRemoveProductFromCartMutation } from "@/hooks/mutations/use-remove-product-from-cart";
+import { useDecreaseProductFromCart } from "@/hooks/mutations/use-decrease-product-from-cart";
+import { useIncreaseCartProduct } from "@/hooks/mutations/use-increase-cart-product";
 
 interface CartItemProps {
     id: string;
@@ -20,6 +23,10 @@ const CartItem = ({
     productVariantTotalPriceInCents,
     quantity
 }: CartItemProps) => {
+    const removeProductFromCart = useRemoveProductFromCartMutation(id);
+    const decreaseProductFromCart = useDecreaseProductFromCart(id);
+    const increaseProductFromCart = useIncreaseCartProduct(id);
+
     return (
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -37,11 +44,21 @@ const CartItem = ({
                         {productVariantName}
                     </p>
                     <div className="flex w-[100px] items-center border justify-between rounded-lg p-1">
-                        <Button variant="outline" className="h-6 w-6" size="icon">
+                        <Button 
+                            variant="outline" 
+                            className="h-6 w-6" 
+                            size="icon" 
+                            onClick={() => decreaseProductFromCart.mutate()}
+                        >
                             <Minus />
                         </Button>
                         <p>{quantity}</p>
-                        <Button variant="outline" className="h-6 w-6" size="icon">
+                        <Button 
+                            variant="outline" 
+                            className="h-6 w-6" 
+                            size="icon" 
+                            onClick={() => increaseProductFromCart.mutate()}
+                        >
                             <Plus />
                     </Button>
                 </div>
@@ -49,7 +66,7 @@ const CartItem = ({
                
             </div>
             <div className="flex flex-col items-center justify-center gap-2">
-                <Button variant="outline" size="icon"><TrashIcon /></Button>
+                <Button variant="outline" size="icon" onClick={() => removeProductFromCart.mutate()}><TrashIcon /></Button>
                 <p className="text-sm font-bold">
                     {formatCentsToBRL(productVariantTotalPriceInCents)}
                 </p>

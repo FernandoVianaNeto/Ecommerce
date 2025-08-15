@@ -1,18 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { ShoppingBasketIcon } from "lucide-react";
-import { getCart } from "@/app/actions/get-cart";
 import CartItem from "./cart-item";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { formatCentsToBRL } from "@/helpers/money";
+import { useCart } from "@/hooks/queries/use-cart";
+import Link from "next/link";
 
 const Cart = () => {
-    const { data: cart, isPending: cartIsLoading } = useQuery({
-        queryKey: ["cart"],
-        queryFn: () => getCart(),
-    });
+    const { data: cart } = useCart();
 
     return (
         <Sheet>
@@ -34,7 +31,7 @@ const Cart = () => {
                                     return (
                                         <CartItem 
                                             key={item.id}
-                                            id={item.id}
+                                            id={item.id as string}
                                             productName={item.productVariant?.name as string}
                                             productVariantImageUrl={item.productVariant?.imageUrl as string}
                                             productVariantName={item.productVariant?.name as string}
@@ -68,7 +65,11 @@ const Cart = () => {
                                 <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
                             </div>
 
-                            <Button className="rounded-full">Buy now</Button>
+                            <Button className="rounded-full" asChild>
+                                <Link href="/cart/identification">
+                                    Buy now
+                                </Link>
+                            </Button>
                         </div>
                     )}  
                 </div>
