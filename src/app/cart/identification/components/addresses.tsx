@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,7 +18,6 @@ import { toast } from "sonner";
 import { createShippingAddressSchema } from "@/app/actions/create-shipping-address/schema";
 import { shippingAddressTable } from "@/db/schema";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/hooks/queries/use-cart";
 
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
