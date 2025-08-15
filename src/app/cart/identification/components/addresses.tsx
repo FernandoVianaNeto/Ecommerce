@@ -15,13 +15,18 @@ import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 import { toast } from "sonner";
 import { createShippingAddressSchema } from "@/app/actions/create-shipping-address/schema";
+import { shippingAddressTable } from "@/db/schema";
 
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
-const Addresses = () => {
+interface AddressesProps {
+    shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+}
+
+const Addresses = ({ shippingAddresses }: AddressesProps) => {
     const [selectedAddress, setSelectedAddress] = useState<string>();
     
-    const { data: addresses, isLoading: addressesLoading } = useShippingAddresses();
+    const { data: addresses, isLoading: addressesLoading } = useShippingAddresses({ initialData: shippingAddresses });
     
     const form = useForm<AddressFormData>({
         resolver: zodResolver(createShippingAddressSchema),
@@ -81,7 +86,7 @@ const Addresses = () => {
                                             <Label htmlFor={address.id} className="cursor-pointer">
                                                 <div className="ml-2">
                                                     <p className="font-medium">{address.recipientName}</p>
-                                                    <p className="text-sm text-gray-600">
+                                                    <p className="text-sm  text-gray-600">
                                                         {address.street}, {address.number}
                                                         {address.complement && ` - ${address.complement}`}
                                                     </p>
