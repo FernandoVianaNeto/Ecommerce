@@ -85,6 +85,8 @@ export const shippingAddressTable = pgTable("shipping_address", {
     zipCode: text("zip_code").notNull(),
     email: text().notNull(),
     cpfOrCnpj: text("cpf_or_cnpj").notNull(),
+    city: text().notNull(),
+    state: text().notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
