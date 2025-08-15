@@ -1,11 +1,16 @@
 import { getCart } from "@/app/actions/get-cart"
 import { useQuery } from "@tanstack/react-query"
 
-export const CART_QUERY_KEY = ["cart"] as const;
+type CartData = Awaited<ReturnType<typeof getCart>>;
 
-export const useCart = () => {
+export const cartQueryKey = () => ["cart"] as const;
+
+export const useCart = (params: {
+    initialData?: Awaited<ReturnType<typeof getCart>>;
+}) => {
     return useQuery({
-        queryKey: CART_QUERY_KEY,
+        queryKey: cartQueryKey(),
         queryFn: () => getCart(),
-    })
+        initialData: params?.initialData,
+      });
 }

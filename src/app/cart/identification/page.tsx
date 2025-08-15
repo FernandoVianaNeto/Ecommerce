@@ -17,11 +17,21 @@ const Identification = async () => {
     }
 
     const cart = await db.query.cartTable.findFirst({
-        where: eq(cartTable.userId, session.user.id),
+        where: (cart, { eq }) => eq(cart.userId, session.user.id),
         with: {
-            cartItem: true
+            shippingAddress: true,
+            cartItem: {
+                with: {
+                    productVariant: {
+                        with: {
+                            product: true
+                        }
+                    },
+                }
+            }
         }
     });
+
 
     const shippingAddresses = await db.query.shippingAddressTable.findMany({
         where: eq(shippingAddressTable.userId, session.user.id),
@@ -31,7 +41,7 @@ const Identification = async () => {
         <>
             <Header />
             <div className="px-5">
-                <Addresses shippingAddresses={shippingAddresses}/>
+                <Addresses shippingAddresses={shippingAddresses} defaultShippingAddressId={cart?.shippingAddressId}/>
             </div>
         </>
     )

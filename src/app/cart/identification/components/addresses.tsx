@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,19 +12,24 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { PatternFormat } from "react-number-format";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
+import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 import { toast } from "sonner";
 import { createShippingAddressSchema } from "@/app/actions/create-shipping-address/schema";
 import { shippingAddressTable } from "@/db/schema";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/queries/use-cart";
 
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
 interface AddressesProps {
     shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+    defaultShippingAddressId?: string | null;
 }
 
-const Addresses = ({ shippingAddresses }: AddressesProps) => {
-    const [selectedAddress, setSelectedAddress] = useState<string>();
+const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesProps) => {
+    const [selectedAddress, setSelectedAddress] = useState<string>(defaultShippingAddressId ?? "");
+    const router = useRouter();
     
     const { data: addresses, isLoading: addressesLoading } = useShippingAddresses({ initialData: shippingAddresses });
     
@@ -45,21 +50,43 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
     });
 
     const { mutate, isPending } = useCreateShippingAddress();
+    const { mutate: updateShippingAddress, isPending: isUpdating } = useUpdateCartShippingAddress();
 
     const onSubmit = (data: AddressFormData) => {
         if (selectedAddress === "add_new") {
             mutate(data, {
-                onSuccess: () => {
+                onSuccess: (created: typeof shippingAddressTable.$inferSelect) => {
                     toast.success("Address created successfully!");
-                    form.reset();
-                    setSelectedAddress(undefined);
+                    updateShippingAddress(
+                        { shippingAddressId: created.id },
+                        {
+                            onSuccess: () => {
+                                toast.success("Shipping address linked to cart.");
+                                form.reset();
+                            },
+                            onError: (error) => {
+                                toast.error("Failed to link shipping address: " + (error as Error).message);
+                            },
+                        }
+                    );
                 },
                 onError: (error) => {
                     toast.error("Failed to create address: " + error.message);
                 },
             });
         } else if (selectedAddress && selectedAddress !== "add_new") {
-            toast.success("Address selected successfully!");
+            updateShippingAddress(
+                { shippingAddressId: selectedAddress },
+                {
+                    onSuccess: () => {
+                        toast.success("Shipping address linked to cart.");
+                        router.push("/cart/payment");
+                    },
+                    onError: (error) => {
+                        toast.error("Failed to link shipping address: " + (error as Error).message);
+                    },
+                }
+            );
         }
     };
 
@@ -283,7 +310,7 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
 
                             </div>
 
-                            <Button type="submit" className="w-full" disabled={isPending}>
+                            <Button type="submit" className="w-full" disabled={isPending || isUpdating}>
                                 {selectedAddress === "add_new" 
                                     ? (isPending ? "Saving..." : "Save address")
                                     : "Confirm selection"
@@ -291,6 +318,31 @@ const Addresses = ({ shippingAddresses }: AddressesProps) => {
                             </Button>
                         </form>
                     </Form>
+                )}
+
+                {selectedAddress && selectedAddress !== "add_new" && (
+                    <div className="mt-4">
+                        <Button
+                            className="w-full"
+                            disabled={isUpdating}
+                            onClick={() =>
+                                updateShippingAddress(
+                                    { shippingAddressId: selectedAddress },
+                                    {
+                                        onSuccess: () => {
+                                            toast.success("Shipping address linked to cart.");
+                                            // router.push("/cart/payment");
+                                        },
+                                        onError: (error) => {
+                                            toast.error("Failed to link shipping address: " + (error as Error).message);
+                                        },
+                                    }
+                                )
+                            }
+                        >
+                            {isUpdating ? "Going to payment..." : "Go to payment"}
+                        </Button>
+                    </div>
                 )}
             </CardContent>
         </Card>
