@@ -1,11 +1,13 @@
 import Header from "@/components/common/header";
 import { db } from "@/db";
-import { cartTable, shippingAddressTable } from "@/db/schema";
+import { shippingAddressTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Addresses from "./components/addresses";
+import Order from "./components/order";
+import Footer from "@/components/common/footer";
 
 const Identification = async () => {
     const session = await auth.api.getSession({
@@ -41,8 +43,14 @@ const Identification = async () => {
         <>
             <Header />
             <div className="px-5">
-                <Addresses shippingAddresses={shippingAddresses} defaultShippingAddressId={cart?.shippingAddressId}/>
+                <div>
+                    <Addresses shippingAddresses={shippingAddresses} defaultShippingAddressId={cart?.shippingAddressId}/>
+                </div>
+                <div className="py-5">
+                    <Order />
+                </div>
             </div>
+            <Footer />
         </>
     )
 };
