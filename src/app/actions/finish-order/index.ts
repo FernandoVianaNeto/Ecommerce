@@ -76,6 +76,6 @@ export const finishOrder = async (data: FinishOrderSchema) => {
         }
     
         await tx.insert(orderItemTable).values(orderItems);
-        await tx.delete(cartItemTable).where(eq(cartTable.userId, session.user.id))
+        await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id))
     });
 }
