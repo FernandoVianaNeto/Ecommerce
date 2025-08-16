@@ -1,7 +1,7 @@
 import CheckoutItem from "@/components/common/checkout-item";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { db } from "@/db";
 import { formatCentsToBRL } from "@/helpers/money";
 import { auth } from "@/lib/auth";

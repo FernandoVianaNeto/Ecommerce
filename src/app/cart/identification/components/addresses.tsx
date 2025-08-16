@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { createShippingAddressSchema } from "@/app/actions/create-shipping-address/schema";
 import { shippingAddressTable } from "@/db/schema";
 import { useRouter } from "next/navigation";
+import FinishOrderButton from "./finish-order-button";
 
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
@@ -199,8 +200,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                                     )}
                                 />
 
-
-
                                 <FormField
                                     control={form.control}
                                     name="zipCode"
@@ -306,7 +305,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                                         </FormItem>
                                     )}
                                 />
-
                             </div>
 
                             <Button type="submit" className="w-full" disabled={isPending || isUpdating}>
@@ -321,10 +319,9 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
 
                 {selectedAddress && selectedAddress !== "add_new" && (
                     <div className="mt-4">
-                        <Button
-                            className="w-full"
-                            disabled={isUpdating}
-                            onClick={() =>
+                        <FinishOrderButton
+                            isUpdating={isUpdating}
+                            onClick={() => {
                                 updateShippingAddress(
                                     { shippingAddressId: selectedAddress },
                                     {
@@ -336,11 +333,9 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                                             toast.error("Failed to link shipping address: " + (error as Error).message);
                                         },
                                     }
-                                )
-                            }
-                        >
-                            {isUpdating ? "Going to payment..." : "Go to payment"}
-                        </Button>
+                                );
+                            }}
+                        />
                     </div>
                 )}
             </CardContent>
