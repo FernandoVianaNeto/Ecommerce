@@ -13,11 +13,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { PatternFormat } from "react-number-format";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
 import { useUpdateCartShippingAddress } from "@/hooks/mutations/use-update-cart-shipping-address";
+import { useFinishOrder } from "@/hooks/mutations/use-finish-order";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
+import { useCart } from "@/hooks/queries/use-cart";
 import { toast } from "sonner";
 import { createShippingAddressSchema } from "@/app/actions/create-shipping-address/schema";
 import { shippingAddressTable } from "@/db/schema";
 import { useRouter } from "next/navigation";
+import FinishOrderButton from "./finish-order-button";
+
 
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
@@ -28,9 +32,11 @@ interface AddressesProps {
 
 const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesProps) => {
     const [selectedAddress, setSelectedAddress] = useState<string>(defaultShippingAddressId ?? "");
+
     const router = useRouter();
     
     const { data: addresses, isLoading: addressesLoading } = useShippingAddresses({ initialData: shippingAddresses });
+    const { data: cart } = useCart({});
     
     const form = useForm<AddressFormData>({
         resolver: zodResolver(createShippingAddressSchema),
@@ -50,6 +56,7 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
 
     const { mutate, isPending } = useCreateShippingAddress();
     const { mutate: updateShippingAddress, isPending: isUpdating } = useUpdateCartShippingAddress();
+    const { mutate: finishOrder, isPending: isFinishingOrder } = useFinishOrder();
 
     const onSubmit = (data: AddressFormData) => {
         if (selectedAddress === "add_new") {
@@ -199,8 +206,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                                     )}
                                 />
 
-
-
                                 <FormField
                                     control={form.control}
                                     name="zipCode"
@@ -306,7 +311,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                                         </FormItem>
                                     )}
                                 />
-
                             </div>
 
                             <Button type="submit" className="w-full" disabled={isPending || isUpdating}>
@@ -321,26 +325,23 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
 
                 {selectedAddress && selectedAddress !== "add_new" && (
                     <div className="mt-4">
-                        <Button
-                            className="w-full"
-                            disabled={isUpdating}
-                            onClick={() =>
+                        <FinishOrderButton
+                            isUpdating={isUpdating}
+                            onClick={() => {
                                 updateShippingAddress(
                                     { shippingAddressId: selectedAddress },
                                     {
                                         onSuccess: () => {
                                             toast.success("Shipping address linked to cart.");
-                                            // router.push("/cart/payment");
+                                            router.push("/cart/confirmation");
                                         },
                                         onError: (error) => {
                                             toast.error("Failed to link shipping address: " + (error as Error).message);
                                         },
                                     }
-                                )
-                            }
-                        >
-                            {isUpdating ? "Going to payment..." : "Go to payment"}
-                        </Button>
+                                );
+                            }}
+                        />
                     </div>
                 )}
             </CardContent>
