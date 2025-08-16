@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCaption, TableCell, TableRow } from "@/components/ui/table";
 import { db } from "@/db";
+import { formatCentsToBRL } from "@/helpers/money";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -32,13 +33,15 @@ const Order = async () => {
         }
     });
 
-    let subtotal = 0;
+    let subtotal = "0";
 
     if (cart) {
-        subtotal = cart.cartItem.reduce(
+        const totalInCents = cart.cartItem.reduce(
             (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
             0,
         )
+
+        subtotal = formatCentsToBRL(totalInCents)
     }
 
     return (
@@ -68,17 +71,17 @@ const Order = async () => {
                     </TableBody>
                 </Table>
 
-                <div className="py-6">
+                <div className="py-10">
                     <Separator />
                 </div>
 
                 <div className="flex flex-col pt-5">
-                    <>
-                        {
-                            cart?.cartItem && cart?.cartItem.map((item) => 
+                    {
+                        cart?.cartItem && cart.cartItem.map((item, index) => {
+                            const isLastItem = index === cart.cartItem.length - 1;
+                            return (
                                 <div key={item.id}>
                                     <CheckoutItem 
-                                        key={item.id}
                                         id={item.id}
                                         productName={item?.productVariant?.product?.name as string}
                                         productVariantImageUrl={item?.productVariant?.imageUrl as string}
@@ -86,11 +89,15 @@ const Order = async () => {
                                         productVariantTotalPriceInCents={(item?.productVariant?.priceInCents as number) * item.quantity}
                                         quantity={item.quantity}
                                     />
-                                    {cart?.cartItem.length > 1 && (<Separator />)}    
+                                    {cart.cartItem.length > 1 && !isLastItem && (
+                                        <div className="py-6">
+                                            <Separator />
+                                        </div>
+                                    )}
                                 </div>
-                            )
-                        }
-                    </>
+                            );
+                        })
+                    }
                 </div>
             </CardContent>
         </Card>

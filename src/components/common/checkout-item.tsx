@@ -31,22 +31,15 @@ const CheckoutItem = ({
                     className="rounded-2xl"
                 />
                 <div className="flex flex-col gap-1">
-                    <p className="text-sm font-semibold">
-                        {productName}
-                    </p>
+                    <p className="text-sm font-semibold">{productName}</p>
                     <div className="flex flex-col">
-                        <p className="text-muted-foreground text-xs font-medium">
-                            {productVariantName}
-                        </p>
-                        <p className="text-muted-foreground text-xs font-medium">
-                            {quantity}
-                        </p>
+                        <p className="text-muted-foreground text-xs font-medium">{productVariantName}</p>
+                        <p className="text-muted-foreground text-xs font-medium">{quantity}</p>
                     </div>
                    
                     <p className="text-sm font-semibold">
                         {totalItemPrice}
                     </p>
-                    
                 </div>
                
             </div>

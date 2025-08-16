@@ -104,6 +104,13 @@ export const cartItemTable = pgTable("cart_item", {
     quantity: integer("quantity").notNull().default(1),
 });
 
+export const orderTable = pgTable("order", {
+    id: uuid().primaryKey().defaultRandom(),
+    cartId: uuid("cart_id").notNull().references(() => cartTable.id, { onDelete: "cascade" }),
+    productVariantId: uuid("product_variant_id").references(() => productVariantTable.id, { onDelete: "cascade" }),
+    quantity: integer("quantity").notNull().default(1),
+});
+
 export const cartRelations = relations(cartTable, (params) => {
     return {
         user: params.one(userTable, {
