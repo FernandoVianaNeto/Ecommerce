@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { cartItemTable, cartTable, orderItemTable, orderTable } from "@/db/schema";
+import { revalidatePath } from "next/cache";
 
 export const finishOrder = async (data: FinishOrderSchema) => {
     const session = await auth.api.getSession({
@@ -78,4 +79,7 @@ export const finishOrder = async (data: FinishOrderSchema) => {
         await tx.insert(orderItemTable).values(orderItems);
         await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id))
     });
+
+    revalidatePath("cart/identification");
+    revalidatePath("cart/confirmation");
 }

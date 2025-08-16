@@ -21,9 +21,7 @@ import { createShippingAddressSchema } from "@/app/actions/create-shipping-addre
 import { shippingAddressTable } from "@/db/schema";
 import { useRouter } from "next/navigation";
 import FinishOrderButton from "./finish-order-button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import Image from "next/image";
-import illustriation from '../../../../../public/illustration.svg'
+
 
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
@@ -34,7 +32,7 @@ interface AddressesProps {
 
 const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesProps) => {
     const [selectedAddress, setSelectedAddress] = useState<string>(defaultShippingAddressId ?? "");
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
     const router = useRouter();
     
     const { data: addresses, isLoading: addressesLoading } = useShippingAddresses({ initialData: shippingAddresses });
@@ -328,32 +326,14 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                 {selectedAddress && selectedAddress !== "add_new" && (
                     <div className="mt-4">
                         <FinishOrderButton
-                            isUpdating={isUpdating || isFinishingOrder}
+                            isUpdating={isUpdating}
                             onClick={() => {
                                 updateShippingAddress(
                                     { shippingAddressId: selectedAddress },
                                     {
                                         onSuccess: () => {
                                             toast.success("Shipping address linked to cart.");
-                                            if (cart?.cartItem && cart.cartItem.length > 0) {
-                                                finishOrder({
-                                                    shippingAddressId: selectedAddress,
-                                                    items: cart?.cartItem?.filter(item => item.productVariantId)?.map(item => ({
-                                                        productVariantId: item.productVariantId!,
-                                                        quantity: item.quantity
-                                                    })) || []
-                                                }, {
-                                                    onSuccess: () => {
-                                                        toast.success("Order finished successfully!");
-                                                        setIsDialogOpen(true);
-                                                    },
-                                                    onError: (error) => {
-                                                        toast.error("Failed to finish order: " + (error as Error).message);
-                                                    },
-                                                });
-                                            } else {
-                                                toast.error("No items in cart to finish order");
-                                            }
+                                            router.push("/cart/confirmation");
                                         },
                                         onError: (error) => {
                                             toast.error("Failed to link shipping address: " + (error as Error).message);
@@ -364,38 +344,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
                         />
                     </div>
                 )}
-
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogContent className="text-center">
-                        <Image src={illustriation} alt="order created successfully" height={300} width={300}/>
-                        <DialogTitle className="mt-4 text-2xl">Order Created Successfully!</DialogTitle>
-
-                        <DialogDescription>
-                                Your order has been created and your cart has been cleared. 
-                                You will be redirected to the payment page.
-                        </DialogDescription>
-                        <div className="flex items-center justify-center space-x-2">
-                            
-                        </div>
-                        <DialogFooter>
-                            <Button 
-                                    onClick={() => {
-                                        setIsDialogOpen(false);
-                                        router.push("/cart/payment");
-                                    }}
-                                    className="rounded-full"
-                                    size="lg"
-                                >
-                                    Go to Payment
-                            </Button>
-                            <Button variant="outline" className="rounded-full" size="lg">
-                                Go back to store
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-
-                
             </CardContent>
         </Card>
     )
