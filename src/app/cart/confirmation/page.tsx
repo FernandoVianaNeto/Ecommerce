@@ -58,7 +58,11 @@ const ConfirmationPage = () => {
         );
     }
 
-    if (!cart || !cart.shippingAddress || !('shippingAddress' in cart)) {
+    if (
+        !cart ||
+        !('shippingAddress' in cart) ||
+        !cart.shippingAddress
+    ) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">No cart or shipping address found</div>
