@@ -8,6 +8,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import VariantsSelector from "./components/variants-selector";
 import ProductActions from "./components/product-actions";
+import Footer from "@/components/common/footer";
 
 interface ProductVariantPageProps {
   params: Promise<{
@@ -57,21 +58,31 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         <VariantsSelector variants={productVariant.product.variants} variantSelected={slug}/>
 
         <h3 className="text-lg font-semibold">{productVariant.product.name}</h3>
-        <h3 className="text-muted-foreground text-sm">{productVariant.name}</h3>
-        <h3 className="text-muted-foreground text-sm">
-          {formatCentsToBRL(productVariant.priceInCents)}
-        </h3>
+
+        <div className="flex flex-col gap-1">
+          <h3 className="text-muted-foreground text-sm">{productVariant.name}</h3>
+          <h3 className="text-muted-foreground text-sm">
+            {formatCentsToBRL(productVariant.priceInCents)}
+          </h3>
+        </div>
+
+        <div className="text-sm">
+          {productVariant.product.description}
+        </div>
 
         <ProductActions productVariantId={productVariant.id}/>
 
-        <div>{productVariant.product.description}</div>
       </div>
 
-      <div>
+      <div className="pt-10">
         <ProductList 
           title="You may like"
           products={likelyProducts as any}
         />
+      </div>
+
+      <div className="pt-5">
+        <Footer />
       </div>
     </div>
   );
