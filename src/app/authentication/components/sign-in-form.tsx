@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/common/header';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
