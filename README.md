@@ -1,6 +1,6 @@
 # 🛍️ E-Commerce Platform
 
-A modern and fully responsive e-commerce web application built with **Next.js**, **React**, **Node.js**, **TypeScript** and **Stripe** for payment checkout.  
+A modern and fully responsive e-commerce web application built with **Next.js**, **React**, **Node.js**, **Tailwind CSS**, **TypeScript** and **Stripe** for payment checkout.  
 It provides a seamless shopping experience with secure authentication, smooth checkout, and mobile-friendly design.
 
 ## ✨ Features
@@ -8,7 +8,7 @@ It provides a seamless shopping experience with secure authentication, smooth ch
 - **Shopping Cart** – Add, update, and remove products with an intuitive cart system.
 - **Payment Checkout** – Secure and smooth payment process.
 - **Responsive Design** – Optimized for desktop, tablet, and mobile devices.
-- **Modern Stack** – Built with Next.js for SSR/SEO benefits, React for dynamic UI, and TypeScript for type-safety.
+- **Modern Stack** – Built with Next.js for SSR/SEO benefits, React for dynamic UI, TypeScript for type-safety and TailWind CSS for styles.
 
 ## 🛠️ Tech Stack
 - **Frontend:** Next.js, React, TypeScript
