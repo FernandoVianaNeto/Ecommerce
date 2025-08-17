@@ -11,7 +11,7 @@ export const useFinishOrder = () => {
 
     return useMutation({
         mutationKey: finishOrderMutationKey(),
-        mutationFn: (data: FinishOrderSchema) => finishOrder(data),
+        mutationFn: (data: FinishOrderSchema) => finishOrder(),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
             queryClient.invalidateQueries({ queryKey: shippingAddressesQueryKey() });

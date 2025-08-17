@@ -1,14 +1,13 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { FinishOrderSchema } from "./schema";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { cartItemTable, cartTable, orderItemTable, orderTable } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 
-export const finishOrder = async (data: FinishOrderSchema) => {
+export const finishOrder = async () => {
     const session = await auth.api.getSession({
         headers: await headers()
     });
@@ -40,7 +39,9 @@ export const finishOrder = async (data: FinishOrderSchema) => {
     const totalPriceInCents = cart.cartItem.reduce(
         (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
         0,
-    )
+    );
+
+    let orderId: string | undefined;
 
     await db.transaction(async (tx) => {
         if (!cart.shippingAddress) {
@@ -75,6 +76,8 @@ export const finishOrder = async (data: FinishOrderSchema) => {
         if (orderItems.length === 0) {
             throw new Error("no valid order items to insert");
         }
+
+        orderId = order.id;
     
         await tx.insert(orderItemTable).values(orderItems);
         await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id))
@@ -82,4 +85,10 @@ export const finishOrder = async (data: FinishOrderSchema) => {
 
     revalidatePath("cart/identification");
     revalidatePath("cart/confirmation");
+
+    if (!orderId) {
+        throw new Error("order id not found");
+    }
+
+    return orderId;
 }

@@ -136,7 +136,7 @@ export const orderItemTable = pgTable("order_item", {
 
 export const orderItemRelations = relations(orderItemTable, (params) => {
     return {
-        productVariantId: params.one(productVariantTable, {
+        productVariant: params.one(productVariantTable, {
             fields: [orderItemTable.productVariantId],
             references: [productVariantTable.id],
         }),

@@ -14,6 +14,8 @@ import Header from "@/components/common/header";
 import CheckoutItem from "@/components/common/checkout-item";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
+import { createCheckoutSession } from "@/app/actions/create-checkout-session";
+import { loadStripe } from "@stripe/stripe-js";
 
 const ConfirmationPage = () => {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -28,23 +30,51 @@ const ConfirmationPage = () => {
     }, [cart, router]);
 
     const handleFinishOrder = () => {
+        if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+            throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set");
+        }
+
         if (cart?.cartItem && cart.cartItem.length > 0) {
-            finishOrder({
-                shippingAddressId: cart.shippingAddressId!,
-                items: cart.cartItem
-                    .filter(item => item.productVariantId)
-                    .map(item => ({
-                        productVariantId: item.productVariantId!,
-                        quantity: item.quantity
-                    }))
-            }, {
-                onSuccess: () => {
-                    setIsDialogOpen(true);
+            finishOrder(
+                {
+                    shippingAddressId: cart.shippingAddressId!,
+                    items: cart.cartItem
+                        .filter(item => item.productVariantId)
+                        .map(item => ({
+                            productVariantId: item.productVariantId!,
+                            quantity: item.quantity
+                        }))
                 },
-                onError: (error) => {
-                    toast.error("Failed to finish order: " + (error as Error).message);
-                },
-            });
+                {
+                    onSuccess: async (orderId: string) => {
+                        try {
+                            const checkoutSession = await createCheckoutSession({
+                                orderId,
+                            });
+
+                            const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+
+                            if (!stripe) {
+                                toast.error("Stripe não foi carregado");
+                                return;
+                            }
+
+                            const { error } = await stripe.redirectToCheckout({
+                                sessionId: checkoutSession.id,
+                            });
+
+                            if (error) {
+                                toast.error("Erro ao redirecionar para o checkout: " + error.message);
+                            }
+                        } catch (error) {
+                            toast.error("Erro ao criar sessão de checkout: " + (error as Error).message);
+                        }
+                    },
+                    onError: (error) => {
+                        toast.error("Failed to finish order: " + (error as Error).message);
+                    },
+                }
+            );
         } else {
             toast.error("No items in cart to finish order");
         }
@@ -58,7 +88,11 @@ const ConfirmationPage = () => {
         );
     }
 
-    if (!cart || !cart.shippingAddress || !('shippingAddress' in cart)) {
+    if (
+        !cart ||
+        !('shippingAddress' in cart) ||
+        !cart.shippingAddress
+    ) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">No cart or shipping address found</div>
