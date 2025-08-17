@@ -19,70 +19,70 @@ const Cart = () => {
             </Button>
         </SheetTrigger>
         <SheetContent>
-            <SheetHeader>
-                <SheetTitle>Cart</SheetTitle>
-            </SheetHeader>
-            {cart?.cartItem && cart.cartItem.length > 0 ? (
-                <div className="space-y-4 px-5 h-full">
-                    <div className="flex h-full flex-col gap-8 pb-5">
-                        <div className="flex h-full max-h-full flex-col gap-5 overflow-hidden">
-                            <ScrollArea>
-                                <div className="flex h-full flex-col gap-8">
-                                    {cart.cartItem.map((item) => (
-                                        <CartItem 
-                                            key={item.id}
-                                            id={item.id as string}
-                                            productName={item.productVariant?.name as string}
-                                            productVariantImageUrl={item.productVariant?.imageUrl as string}
-                                            productVariantName={item.productVariant?.name as string}
-                                            productVariantTotalPriceInCents={item.productVariant?.priceInCents as number}
-                                            quantity={item.quantity as number}
-                                        />
-                                    ))}
+                <SheetHeader>
+                    <SheetTitle>Shopping Cart</SheetTitle>
+                </SheetHeader>
+                {cart?.cartItem && cart.cartItem.length > 0 ? (
+                    <div className="space-y-4 px-5 h-full">
+                        <div className="flex h-full flex-col gap-8 pb-5">
+                            <div className="flex h-full max-h-full flex-col gap-5 overflow-hidden">
+                                <ScrollArea>
+                                    <div className="flex h-full flex-col gap-8">
+                                        {cart.cartItem.map((item) => (
+                                            <CartItem 
+                                                key={item.id}
+                                                id={item.id as string}
+                                                productName={item.productVariant?.name as string}
+                                                productVariantImageUrl={item.productVariant?.imageUrl as string}
+                                                productVariantName={item.productVariant?.name as string}
+                                                productVariantTotalPriceInCents={item.productVariant?.priceInCents as number}
+                                                quantity={item.quantity as number}
+                                            />
+                                        ))}
+                                    </div>
+                                </ScrollArea>
+                            </div>
+
+                            <div className="flex flex-col gap-4">
+                                <Separator />
+
+                                <div className="flex items-center justify-between text-xs font-medium">
+                                    <p>Subtotal</p>
+                                    <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
                                 </div>
-                            </ScrollArea>
-                        </div>
 
-                        <div className="flex flex-col gap-4">
-                            <Separator />
+                                <Separator />
 
-                            <div className="flex items-center justify-between text-xs font-medium">
-                                <p>Subtotal</p>
-                                <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
+                                <div className="flex items-center justify-between text-xs font-medium">
+                                    <p>Shipping</p>
+                                    <p>Free</p>
+                                </div>
+
+                                <div className="flex items-center justify-between text-xs font-medium">
+                                    <p>Total</p>
+                                    <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
+                                </div>
+
+                                <Button className="rounded-full" asChild>
+                                    <Link href="/cart/identification">
+                                        Buy now
+                                    </Link>
+                                </Button>
                             </div>
-
-                            <Separator />
-
-                            <div className="flex items-center justify-between text-xs font-medium">
-                                <p>Shipping</p>
-                                <p>Free</p>
-                            </div>
-
-                            <div className="flex items-center justify-between text-xs font-medium">
-                                <p>Total</p>
-                                <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
-                            </div>
-
-                            <Button className="rounded-full" asChild>
-                                <Link href="/cart/identification">
-                                    Buy now
-                                </Link>
-                            </Button>
                         </div>
                     </div>
-                </div>
-            ) : (
-                <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
-                    <ShoppingBasketIcon className="w-16 h-16 text-muted-foreground" />
-                    <p className="text-muted-foreground text-sm font-medium">Your shopping cart is empty</p>
-                    <Button asChild>
-                        <Link href="/">
-                            Continue shopping
-                        </Link>
-                    </Button>
-                </div>
-            )}
-        </SheetContent>
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
+                        <ShoppingBasketIcon className="w-16 h-16 text-muted-foreground" />
+                        <p className="text-muted-foreground text-sm font-medium">Your shopping cart is empty</p>
+                        <Button asChild>
+                            <Link href="/">
+                                Continue shopping
+                            </Link>
+                        </Button>
+                    </div>
+                )}
+            </SheetContent>
         </Sheet>
     );
 };
