@@ -9,7 +9,7 @@ import { useCart } from "@/hooks/queries/use-cart";
 import Link from "next/link";
 
 const Cart = () => {
-    const { data: cart } = useCart();
+    const { data: cart } = useCart({});
 
     return (
         <Sheet>
@@ -22,13 +22,13 @@ const Cart = () => {
             <SheetHeader>
                 <SheetTitle>Cart</SheetTitle>
             </SheetHeader>
-            <div className="space-y-4 px-5 h-full">
-                <div className="flex h-full flex-col gap-8 pb-5">
-                    <div className="flex h-full max-h-full flex-col gap-5 overflow-hidden">
-                        <ScrollArea>
-                            <div className="flex h-full flex-col gap-8">
-                                {cart?.cartItem.map((item) => {
-                                    return (
+            {cart?.cartItem && cart.cartItem.length > 0 ? (
+                <div className="space-y-4 px-5 h-full">
+                    <div className="flex h-full flex-col gap-8 pb-5">
+                        <div className="flex h-full max-h-full flex-col gap-5 overflow-hidden">
+                            <ScrollArea>
+                                <div className="flex h-full flex-col gap-8">
+                                    {cart.cartItem.map((item) => (
                                         <CartItem 
                                             key={item.id}
                                             id={item.id as string}
@@ -38,13 +38,11 @@ const Cart = () => {
                                             productVariantTotalPriceInCents={item.productVariant?.priceInCents as number}
                                             quantity={item.quantity as number}
                                         />
-                                    )
-                                })}
-                            </div>
-                        </ScrollArea>
-                    </div>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </div>
 
-                    {cart?.cartItem?.length as number > 0 && (
                         <div className="flex flex-col gap-4">
                             <Separator />
 
@@ -71,9 +69,19 @@ const Cart = () => {
                                 </Link>
                             </Button>
                         </div>
-                    )}  
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
+                    <ShoppingBasketIcon className="w-16 h-16 text-muted-foreground" />
+                    <p className="text-muted-foreground text-sm font-medium">Your shopping cart is empty</p>
+                    <Button asChild>
+                        <Link href="/">
+                            Continue shopping
+                        </Link>
+                    </Button>
+                </div>
+            )}
         </SheetContent>
         </Sheet>
     );
