@@ -112,35 +112,46 @@ const ConfirmationPage = () => {
     return (
         <>
             <Header />
-            <div className="container mx-auto px-4 py-8">
-                <div className="max-w-4xl mx-auto space-y-6">
+            
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+                <div className="space-y-6 lg:space-y-8">
                     <div>
-                        <h1 className="text-3xl font-bold">Order Confirmation</h1>
-                        <p className="text-gray-600 mt-2">Review your order details before confirming</p>
+                        <h1 className="text-2xl lg:text-3xl font-bold">Order Confirmation</h1>
+                        <p className="text-gray-600 mt-2 lg:text-lg">Review your order details before confirming</p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Shipping Address</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <p className="font-medium">{cartWithRelations.shippingAddress.recipientName}</p>
-                                <p className="text-gray-600">
-                                    {cartWithRelations.shippingAddress.street}, {cartWithRelations.shippingAddress.number}
-                                    {cartWithRelations.shippingAddress.complement && ` - ${cartWithRelations.shippingAddress.complement}`}
-                                </p>
-                                <p className="text-gray-600">
-                                    {cartWithRelations.shippingAddress.neighborhood} - {cartWithRelations.shippingAddress.city}/{cartWithRelations.shippingAddress.state}
-                                </p>
-                                <p className="text-gray-600">ZIP: {cartWithRelations.shippingAddress.zipCode}</p>
-                                <p className="text-gray-600">{cartWithRelations.shippingAddress.email}</p>
-                            </CardContent>
-                        </Card>
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+                        <div className="flex flex-col gap-6">
+                            <Card className="h-fit">
+                                <CardHeader>
+                                    <CardTitle className="text-lg lg:text-xl">Shipping Address</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2 lg:space-y-3">
+                                    <p className="font-medium lg:text-lg">{cartWithRelations.shippingAddress.recipientName}</p>
+                                    <p className="text-gray-600 lg:text-base">
+                                        {cartWithRelations.shippingAddress.street}, {cartWithRelations.shippingAddress.number}
+                                        {cartWithRelations.shippingAddress.complement && ` - ${cartWithRelations.shippingAddress.complement}`}
+                                    </p>
+                                    <p className="text-gray-600 lg:text-base">
+                                        {cartWithRelations.shippingAddress.neighborhood} - {cartWithRelations.shippingAddress.city}/{cartWithRelations.shippingAddress.state}
+                                    </p>
+                                    <p className="text-gray-600 lg:text-base">ZIP: {cartWithRelations.shippingAddress.zipCode}</p>
+                                    <p className="text-gray-600 lg:text-base">{cartWithRelations.shippingAddress.email}</p>
+                                </CardContent>
+                            </Card>
 
+                            <Button
+                                onClick={handleFinishOrder}
+                                disabled={isPending}
+                                className="rounded-full w-full"
+                                size="lg"
+                            >
+                                {isPending ? "Processing..." : "Confirm Order"}
+                            </Button>
+                        </div>
                         <Card>
                             <CardHeader>
-                                <CardTitle>Order Summary</CardTitle>
+                                <CardTitle className="text-lg lg:text-xl">Order Summary</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <Table className="py-5">
@@ -168,7 +179,7 @@ const ConfirmationPage = () => {
                                     <Separator />
                                 </div>
 
-                                <div className="flex flex-col pt-5">
+                                <div className="flex flex-col">
                                     {
                                         cart?.cartItem && cart.cartItem.map((item, index) => {
                                             const isLastItem = index === cart.cartItem.length - 1;
@@ -196,14 +207,7 @@ const ConfirmationPage = () => {
                         </Card>
                     </div>
 
-                    <Button
-                        onClick={handleFinishOrder}
-                        disabled={isPending}
-                        className="rounded-full w-full"
-                        size="lg"
-                    >
-                        {isPending ? "Processing..." : "Confirm Order"}
-                    </Button>
+                   
                 </div>
 
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
