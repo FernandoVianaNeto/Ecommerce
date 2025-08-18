@@ -32,9 +32,11 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   return (
     <div>
       <Header />
-      <div className="space-y-6 px-5">
-        <h2 className="text-xl font-semibold">{category.name}</h2>
-        <div className="grid grid-cols-2 gap-5">
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 space-y-6 lg:space-y-8">
+        <h2 className="text-xl lg:text-2xl font-semibold">{category.name}</h2>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
           {
             products.map((product) => (
               <ProductItem key={product.id} product={product} textContainerClassName="w-full" />
@@ -42,6 +44,7 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
           }
         </div>
       </div>
+      
       <Footer />
     </div>
   );

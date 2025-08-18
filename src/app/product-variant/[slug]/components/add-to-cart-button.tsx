@@ -4,6 +4,7 @@ import { addProductToCart } from "@/app/actions/add-cart-product";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddToCartButtonProps {
     productVariantId: string;
@@ -21,6 +22,7 @@ const AddToCartButton = ({ productVariantId, quantity }: AddToCartButtonProps) =
         }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["cart"] });
+            toast.success("Product added to cart");
         }
     })  
     return (

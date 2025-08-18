@@ -42,14 +42,26 @@ const Identification = async () => {
     return (
         <>
             <Header />
-            <div className="px-5">
-                <div>
-                    <Addresses shippingAddresses={shippingAddresses} defaultShippingAddressId={cart?.shippingAddressId}/>
-                </div>
-                <div className="py-5">
-                    <Order />
+            
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+                <div className="space-y-6 lg:space-y-8">
+                    <div>
+                        <h1 className="text-2xl lg:text-3xl font-bold">Shipping Information</h1>
+                        <p className="text-gray-600 mt-2 lg:text-lg">Select or add a shipping address for your order</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+                        <div>
+                            <Addresses shippingAddresses={shippingAddresses} defaultShippingAddressId={cart?.shippingAddressId}/>
+                        </div>
+                        
+                        <div>
+                            <Order />
+                        </div>
+                    </div>
                 </div>
             </div>
+            
             <Footer />
         </>
     )

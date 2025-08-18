@@ -1,3 +1,4 @@
+import CartItem from "@/components/common/cart-item";
 import CheckoutItem from "@/components/common/checkout-item";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -71,11 +72,14 @@ const Order = async () => {
                     </TableBody>
                 </Table>
 
-                <div className="py-10">
-                    <Separator />
-                </div>
 
-                <div className="flex flex-col pt-5">
+                {cart?.cartItem && cart?.cartItem.length > 0 && (
+                    <div className="py-6">
+                        <Separator />
+                    </div>
+                )}
+
+                <div className="flex flex-col">
                     {
                         cart?.cartItem && cart.cartItem.map((item, index) => {
                             const isLastItem = index === cart.cartItem.length - 1;
