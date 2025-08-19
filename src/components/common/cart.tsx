@@ -22,13 +22,13 @@ const Cart = () => {
             <SheetHeader>
                 <SheetTitle>Shopping Cart</SheetTitle>
             </SheetHeader>
-            {cart?.cartItem && cart.cartItem.length > 0 ? (
+            {cart?.cartItems && cart.cartItems.length > 0 ? (
                 <div className="space-y-4 px-3 sm:px-5 h-full">
                     <div className="flex h-full flex-col gap-8 pb-5">
                         <div className="flex h-full max-h-full flex-col gap-5 overflow-hidden">
                             <ScrollArea>
                                 <div className="flex h-full flex-col gap-8">
-                                    {cart.cartItem.map((item) => (
+                                    {cart.cartItems.map((item) => (
                                         <CartItem 
                                             key={item.id}
                                             id={item.id as string}

@@ -22,7 +22,7 @@ const Order = async () => {
         where: (cart, { eq }) => eq(cart.userId, session.user.id),
         with: {
             shippingAddress: true,
-            cartItem: {
+            cartItems: {
                 with: {
                     productVariant: {
                         with: {
@@ -37,7 +37,7 @@ const Order = async () => {
     let subtotal = "0";
 
     if (cart) {
-        const totalInCents = cart.cartItem.reduce(
+        const totalInCents = cart.cartItems.reduce(
             (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
             0,
         )
@@ -73,7 +73,7 @@ const Order = async () => {
                 </Table>
 
 
-                {cart?.cartItem && cart?.cartItem.length > 0 && (
+                {cart?.cartItems && cart?.cartItems.length > 0 && (
                     <div className="py-6">
                         <Separator />
                     </div>
@@ -81,8 +81,8 @@ const Order = async () => {
 
                 <div className="flex flex-col">
                     {
-                        cart?.cartItem && cart.cartItem.map((item, index) => {
-                            const isLastItem = index === cart.cartItem.length - 1;
+                        cart?.cartItems && cart.cartItems.map((item, index) => {
+                            const isLastItem = index === cart.cartItems.length - 1;
                             return (
                                 <div key={item.id}>
                                     <CheckoutItem 
@@ -93,7 +93,7 @@ const Order = async () => {
                                         productVariantTotalPriceInCents={(item?.productVariant?.priceInCents as number) * item.quantity}
                                         quantity={item.quantity}
                                     />
-                                    {cart.cartItem.length > 1 && !isLastItem && (
+                                    {cart.cartItems.length > 1 && !isLastItem && (
                                         <div className="py-6">
                                             <Separator />
                                         </div>

@@ -34,11 +34,11 @@ const ConfirmationPage = () => {
             throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set");
         }
 
-        if (cart?.cartItem && cart.cartItem.length > 0) {
+        if (cart?.cartItems && cart.cartItems.length > 0) {
             finishOrder(
                 {
                     shippingAddressId: cart.shippingAddressId!,
-                    items: cart.cartItem
+                    items: cart.cartItems
                         .filter(item => item.productVariantId)
                         .map(item => ({
                             productVariantId: item.productVariantId!,
@@ -102,7 +102,7 @@ const ConfirmationPage = () => {
 
     const cartWithRelations = cart as typeof cart & { shippingAddress: NonNullable<typeof cart.shippingAddress> };
     
-    const totalPriceInCents = cartWithRelations.cartItem.reduce(
+    const totalPriceInCents = cartWithRelations.cartItems.reduce(
         (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
         0,
     );
@@ -181,8 +181,8 @@ const ConfirmationPage = () => {
 
                                 <div className="flex flex-col">
                                     {
-                                        cart?.cartItem && cart.cartItem.map((item, index) => {
-                                            const isLastItem = index === cart.cartItem.length - 1;
+                                        cart?.cartItems && cart.cartItems.map((item, index) => {
+                                            const isLastItem = index === cart.cartItems.length - 1;
                                             return (
                                                 <div key={item.id}>
                                                     <CheckoutItem 
@@ -193,7 +193,7 @@ const ConfirmationPage = () => {
                                                         productVariantTotalPriceInCents={(item?.productVariant?.priceInCents as number) * item.quantity}
                                                     quantity={item.quantity}
                                                 />
-                                                    {cart.cartItem.length > 1 && !isLastItem && (
+                                                    {cart.cartItems.length > 1 && !isLastItem && (
                                                         <div className="py-6">
                                                             <Separator />
                                                         </div>

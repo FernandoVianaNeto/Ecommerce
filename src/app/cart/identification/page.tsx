@@ -22,7 +22,7 @@ const Identification = async () => {
         where: (cart, { eq }) => eq(cart.userId, session.user.id),
         with: {
             shippingAddress: true,
-            cartItem: {
+            cartItems: {
                 with: {
                     productVariant: {
                         with: {

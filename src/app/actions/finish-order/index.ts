@@ -20,7 +20,7 @@ export const finishOrder = async () => {
         where: eq(cartTable.userId, session?.user.id),
         with: {
             shippingAddress: true,
-            cartItem: {
+            cartItems: {
                 with: {
                     productVariant: {
                         with: {
@@ -36,7 +36,7 @@ export const finishOrder = async () => {
         throw new Error("cart not found");
     }
 
-    const totalPriceInCents = cart.cartItem.reduce(
+    const totalPriceInCents = cart.cartItems.reduce(
         (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
         0,
     );
@@ -64,7 +64,7 @@ export const finishOrder = async () => {
             totalPriceInCents: totalPriceInCents,
         }).returning();
     
-        const orderItems = cart.cartItem
+        const orderItems = cart.cartItems
             .filter((item) => typeof item.productVariant?.priceInCents === "number")
             .map((item) => ({
                 orderId: order.id,

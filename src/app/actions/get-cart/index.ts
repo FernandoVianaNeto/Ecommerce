@@ -18,7 +18,7 @@ export const getCart = async () => {
         where: (cart, { eq }) => eq(cart.userId, session.user.id),
         with: {
             shippingAddress: true,
-            cartItem: {
+            cartItems: {
                 with: {
                     productVariant: {
                         with: {
@@ -35,10 +35,10 @@ export const getCart = async () => {
             userId: session?.user.id
         }).returning();
 
-        return { ...newCart, cartItem: [], totalPriceInCents: 0 }
+        return { ...newCart, cartItems: [], totalPriceInCents: 0 }
     }
 
-    return {...cart, totalPriceInCents: cart.cartItem.reduce(
+    return {...cart, totalPriceInCents: cart.cartItems.reduce(
         (acc, item) => acc + (item?.productVariant?.priceInCents as number) * item.quantity,
         0,
     )}

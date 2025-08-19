@@ -19,7 +19,7 @@ export const sessionTable = pgTable("session", {
     updatedAt: timestamp('updated_at').notNull(),
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
-    userId: text('user_id').notNull().references(()=> userTable.id, { onDelete: 'cascade' })
+    userId: text('user_id').notNull().references(() => userTable.id, { onDelete: 'cascade' })
 });
 
 export const accountTable = pgTable("account", {

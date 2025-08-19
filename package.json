@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
-    "code-quality": "npm run lint:strict && npm run format:check && npm run type-check"
+    "code-quality": "npm run lint:strict && npm run format:check && npm run type-check",
+    "db:seed": "tsx src/db/seeds.ts",
+    "db:reset": "npm run db:seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
