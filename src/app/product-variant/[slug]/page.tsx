@@ -9,6 +9,8 @@ import { notFound } from "next/navigation";
 import VariantsSelector from "./components/variants-selector";
 import ProductActions from "./components/product-actions";
 import Footer from "@/components/common/footer";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface ProductVariantPageProps {
   params: Promise<{
@@ -18,6 +20,12 @@ interface ProductVariantPageProps {
 
 const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
   const { slug } = await params;
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  console.log(session);
   
   const productVariant = await db.query.productVariantTable.findFirst({
       where: eq(productVariantTable.slug, slug),
@@ -80,7 +88,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
 
             <VariantsSelector variants={productVariant.product.variants} variantSelected={slug}/>
             
-            <ProductActions productVariantId={productVariant.id}/>
+            <ProductActions productVariantId={productVariant.id} session={session?.user}/>
           </div>
         </div>
       </div>
