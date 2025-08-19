@@ -26,7 +26,7 @@ export const accountTable = pgTable("account", {
     id: text('id').primaryKey(),
     accountId: text('account_id').notNull(),
     providerId: text('provider_id').notNull(),
-    userId: text('user_id').notNull().references(()=> userTable.id, { onDelete: 'cascade' }),
+    userId: text('user_id').notNull().references(() => userTable.id, { onDelete: 'cascade' }),
     accessToken: text('access_token'),
     refreshToken: text('refresh_token'),
     idToken: text('id_token'),
@@ -54,7 +54,7 @@ export const categoryTable = pgTable("category", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const productTable = pgTable("product_variant", {
+export const productTable = pgTable("product", {
     id: uuid().primaryKey().defaultRandom(),
     name: text().notNull(),
     slug: text().notNull().unique(),
@@ -63,7 +63,7 @@ export const productTable = pgTable("product_variant", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const productVariantTable = pgTable("product", {
+export const productVariantTable = pgTable("product_variant", {
     id: uuid().primaryKey().defaultRandom(),
     productId: uuid("product_id").notNull().references(() => productTable.id, { onDelete: 'cascade' }),
     name: text().notNull(),
@@ -134,117 +134,88 @@ export const orderItemTable = pgTable("order_item", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const orderItemRelations = relations(orderItemTable, (params) => {
-    return {
-        productVariant: params.one(productVariantTable, {
-            fields: [orderItemTable.productVariantId],
-            references: [productVariantTable.id],
-        }),
-        order: params.one(orderTable, {
-            fields: [orderItemTable.orderId],
-            references: [orderTable.id],
-        }),
-    }
-});
+// Relations
+export const productRelations = relations(productTable, (params) => ({
+    category: params.one(categoryTable, {
+        fields: [productTable.categoryId],
+        references: [categoryTable.id],
+    }),
+    variants: params.many(productVariantTable)
+}));
 
-export const orderRelations = relations(orderTable, (params) => {
-    return {
-        order: params.one(userTable, {
-            fields: [orderTable.userId],
-            references: [userTable.id],
-        }),
-        shippingAddress: params.one(shippingAddressTable, {
-            fields: [orderTable.shippingAddressId],
-            references: [shippingAddressTable.id],
-        }),
-        orderItems: params.many(orderItemTable)
-    }
-});
+export const productVariantRelations = relations(productVariantTable, (params) => ({
+    product: params.one(productTable, {
+        fields: [productVariantTable.productId],
+        references: [productTable.id],
+    }),
+    orderItems: params.many(orderItemTable),
+    cartItems: params.many(cartItemTable),
+}));
 
-export const cartRelations = relations(cartTable, (params) => {
-    return {
-        user: params.one(userTable, {
-            fields: [cartTable.userId],
-            references: [userTable.id],
-        }),
-        shippingAddress: params.one(shippingAddressTable, {
-            fields: [cartTable.shippingAddressId],
-            references: [shippingAddressTable.id],
-        }),
-        cartItem: params.many(cartItemTable)
-    }
-});
+export const categoryRelations = relations(categoryTable, (params) => ({
+    products: params.many(productTable),
+}));
 
-export const cartItemRelations = relations(cartItemTable, (params) => {
-    return {
-        cart: params.one(cartTable, {
-            fields: [cartItemTable.cartId],
-            references: [cartTable.id],
-        }),
-        productVariant: params.one(productVariantTable, {
-            fields: [cartItemTable.productVariantId],
-            references: [productVariantTable.id],
-        }),
-    }
-});
+export const cartRelations = relations(cartTable, (params) => ({
+    user: params.one(userTable, {
+        fields: [cartTable.userId],
+        references: [userTable.id],
+    }),
+    shippingAddress: params.one(shippingAddressTable, {
+        fields: [cartTable.shippingAddressId],
+        references: [shippingAddressTable.id],
+    }),
+    cartItems: params.many(cartItemTable)
+}));
 
-export const productRelations = relations(productTable, (params) => {
-    return {
-        categoryId: params.one(categoryTable, {
-            fields: [productTable.categoryId],
-            references: [categoryTable.id],
-        }),
-        variants: params.many(productVariantTable)
-    }
-});
+export const cartItemRelations = relations(cartItemTable, (params) => ({
+    cart: params.one(cartTable, {
+        fields: [cartItemTable.cartId],
+        references: [cartTable.id],
+    }),
+    productVariant: params.one(productVariantTable, {
+        fields: [cartItemTable.productVariantId],
+        references: [productVariantTable.id],
+    }),
+}));
 
-export const productVariantRelations = relations(productVariantTable, (params) => {
-    return {
-        product: params.one(productTable, {
-            fields: [productVariantTable.productId],
-            references: [productTable.id],
-        }),
-        orderItems: params.many(orderItemTable),
-        cartItems: params.many(cartItemTable),
-    }
-});
+export const orderRelations = relations(orderTable, (params) => ({
+    user: params.one(userTable, {
+        fields: [orderTable.userId],
+        references: [userTable.id],
+    }),
+    shippingAddress: params.one(shippingAddressTable, {
+        fields: [orderTable.shippingAddressId],
+        references: [shippingAddressTable.id],
+    }),
+    orderItems: params.many(orderItemTable)
+}));
 
-export const shippingAddressRelations = relations(shippingAddressTable, (params) => {
-    return {
-        user: params.one(userTable, {
-            fields: [shippingAddressTable.userId],
-            references: [userTable.id],
-        }),
-        cart: params.one(cartTable, {
-            fields: [shippingAddressTable.id],
-            references: [cartTable.shippingAddressId]
-        }),
-        order: params.many(orderTable),
-    }
-});
+export const orderItemRelations = relations(orderItemTable, (params) => ({
+    order: params.one(orderTable, {
+        fields: [orderItemTable.orderId],
+        references: [orderTable.id],
+    }),
+    productVariant: params.one(productVariantTable, {
+        fields: [orderItemTable.productVariantId],
+        references: [productVariantTable.id],
+    }),
+}));
 
-export const categoryRelations = relations(categoryTable, (params) => {
-    return {
-        products: params.many(productTable),
-    }
-});
+export const shippingAddressRelations = relations(shippingAddressTable, (params) => ({
+    user: params.one(userTable, {
+        fields: [shippingAddressTable.userId],
+        references: [userTable.id],
+    }),
+    carts: params.many(cartTable),
+    orders: params.many(orderTable),
+}));
 
-export const addressRelations = relations(shippingAddressTable, (params) => {
-    return {
-        user: params.one(userTable, {
-            fields: [shippingAddressTable.userId],
-            references: [userTable.id]
-        }),
-    }
-});
-
-export const userRelations = relations(userTable, (params) => {
-    return {
-        shippingAddresses: params.many(shippingAddressTable),
-        cart: params.one(cartTable, {
-            fields: [userTable.id],
-            references: [cartTable.userId]
-        }),
-        order: params.many(orderTable),
-    }
-});
+export const userRelations = relations(userTable, (params) => ({
+    shippingAddresses: params.many(shippingAddressTable),
+    cart: params.one(cartTable, {
+        fields: [userTable.id],
+        references: [cartTable.userId]
+    }),
+    orders: params.many(orderTable),
+}));
