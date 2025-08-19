@@ -7,9 +7,10 @@ import { useState } from "react";
 
 interface ProductActionsProps {
     productVariantId: string;
+    session: any;
 }
 
-const ProductActions = ({ productVariantId }: ProductActionsProps) => {
+const ProductActions = ({ productVariantId, session }: ProductActionsProps) => {
     const [quantity, setQuantity] = useState(1);
 
     return (
@@ -28,7 +29,7 @@ const ProductActions = ({ productVariantId }: ProductActionsProps) => {
             </div>
             <div className="space-y-4 flex flex-col">
                 <Button className="rounded-full" size="lg" variant="outline">Buy now</Button>
-                <AddToCartButton productVariantId={productVariantId} quantity={quantity}/>
+                <AddToCartButton productVariantId={productVariantId} quantity={quantity} redirectToLogin={!session}/>
             </div>
         </div>
     )

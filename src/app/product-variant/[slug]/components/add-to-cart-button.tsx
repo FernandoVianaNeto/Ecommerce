@@ -5,14 +5,19 @@ import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AddToCartButtonProps {
     productVariantId: string;
     quantity: number;
+    redirectToLogin?: boolean;
 }
 
-const AddToCartButton = ({ productVariantId, quantity }: AddToCartButtonProps) => {
-    const queryClient = useQueryClient()
+const AddToCartButton = ({ productVariantId, quantity, redirectToLogin }: AddToCartButtonProps) => {
+    const router = useRouter();
+    const queryClient = useQueryClient();
+
+    console.log(redirectToLogin);
 
     const { mutate, isPending } = useMutation({
         mutationKey: ["addProductToCart"],
@@ -30,7 +35,13 @@ const AddToCartButton = ({ productVariantId, quantity }: AddToCartButtonProps) =
             className="rounded-full" 
             size="lg"
             disabled={isPending}
-            onClick={() => mutate()}
+            onClick={() => {
+                if (redirectToLogin) {
+                    router.push("/authentication");
+                } else {
+                    mutate();
+                }
+            }}
         >
             { isPending && <Loader2 className="animate-spin" />}
             Add to cart
