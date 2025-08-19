@@ -11,8 +11,6 @@ interface ProductListProps {
 }
 
 const ProductList = (params: ProductListProps) => {
-    console.log(params.products)
-
     return (
         <div className="space-y-6 [&::-webkit-scrollbar]:hidden">
             <h3 className="text-sm font-semibold px-5">{params.title}</h3>
