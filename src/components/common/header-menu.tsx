@@ -84,24 +84,32 @@ const HeaderMenu = () => {
                     </Link>
                 </div>
 
-                <div className="px-5">
-                    <Separator className="my-4" />
-                </div>
+               
 
-                <div className="px-5 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                        <LogOutIcon className="w-4 h-4 text-destructive" />
-                        <span className="font-medium text-destructive">Sair</span>
-                    </div>
-                    <Button
-                        variant="destructive"
-                        size="sm"
-                        className="px-3 py-1.5"
-                        onClick={() => authClient.signOut()}
-                    >
-                        Sair
-                    </Button>
-                </div>
+                {
+                    session?.user && (
+                        <>
+                            <div className="px-5">
+                                <Separator className="my-4" />
+                            </div>
+                            <div className="px-5 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2">
+                                    <LogOutIcon className="w-4 h-4 text-destructive" />
+                                    <span className="font-medium text-destructive">Sair</span>
+                                </div>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    className="px-3 py-1.5"
+                                    onClick={() => authClient.signOut()}
+                                >
+                                    Sair
+                                </Button>
+                            </div>      
+                        </>
+                    )
+                }
+               
             </SheetContent>
         </Sheet>
     )
