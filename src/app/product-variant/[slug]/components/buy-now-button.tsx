@@ -7,13 +7,13 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-interface AddToCartButtonProps {
+interface BuyNowButtonProps {
     productVariantId: string;
     quantity: number;
     redirectToLogin?: boolean;
 }
 
-const AddToCartButton = ({ productVariantId, quantity, redirectToLogin }: AddToCartButtonProps) => {
+const BuyNowButton = ({ productVariantId, quantity, redirectToLogin }: BuyNowButtonProps) => {
     const router = useRouter();
     const queryClient = useQueryClient();
 
@@ -33,18 +33,20 @@ const AddToCartButton = ({ productVariantId, quantity, redirectToLogin }: AddToC
             className="rounded-full" 
             size="lg"
             disabled={isPending}
+            variant="outline"
             onClick={() => {
                 if (redirectToLogin) {
                     router.push("/authentication");
                 } else {
                     mutate();
+                    router.push("/cart/identification");
                 }
             }}
         >
             { isPending && <Loader2 className="animate-spin" />}
-            Add to cart
+            Buy now
         </Button>
     )
 }
 
-export default AddToCartButton;
+export default BuyNowButton;
