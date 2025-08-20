@@ -24,7 +24,7 @@ const ConfirmationPage = () => {
     const { mutate: finishOrder, isPending } = useFinishOrder();
 
     useEffect(() => {
-        if (cart && !cart.shippingAddressId) {
+        if (cart && !cart?.shippingAddressId) {
             router.push("/cart/identification");
         }
     }, [cart, router]);

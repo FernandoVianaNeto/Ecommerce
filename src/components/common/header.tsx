@@ -6,7 +6,6 @@ import Cart from "./cart";
 import HeaderMenu from "./header-menu";
 
 const Header = () => {
-
     return (
         <header className="flex items-center justify-between p-5">
             <Link href="/">

@@ -9,6 +9,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address').min(1, 'Email is required'),
@@ -27,6 +29,7 @@ const SignInForm = () => {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(form.formState.isSubmitting);
         await authClient.signIn.email({
             email: values.email,
             password: values.password,
@@ -96,8 +99,20 @@ const SignInForm = () => {
                             />
                         </CardContent>
                         <CardFooter className="flex flex-col gap-4">
-                            <Button className="w-full" type="submit">Sign-In</Button>
-                            <Button className="w-full" variant="outline" type="button" onClick={() => handleSignInWithGoogle()}>
+                            <Button
+                                className="w-full"
+                                type="submit"
+                                disabled={form.formState.isSubmitting}
+                            >
+                                {form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : "Sign-In"}
+                            </Button>
+                            <Button
+                                className="w-full"
+                                variant="outline"
+                                type="button"
+                                onClick={() => handleSignInWithGoogle()}
+                                disabled={form.formState.isSubmitting}
+                            >
                                 <svg viewBox="0 0 24 24" className="h-4 w-4">
                                     <path
                                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

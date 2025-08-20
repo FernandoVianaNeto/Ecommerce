@@ -28,7 +28,7 @@ const Cart = () => {
                         <div className="flex h-full max-h-full flex-col gap-5 overflow-hidden">
                             <ScrollArea>
                                 <div className="flex h-full flex-col gap-8">
-                                    {cart.cartItems.map((item) => (
+                                    {cart.cartItems.length > 0 && cart.cartItems.map((item) => (
                                         <CartItem 
                                             key={item.id}
                                             id={item.id as string}

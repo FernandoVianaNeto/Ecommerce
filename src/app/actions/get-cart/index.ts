@@ -11,13 +11,22 @@ export const getCart = async () => {
     });
 
     if (!session?.user) {
-        throw new Error("unauthorized");
+        return {
+            id: undefined,
+            userId: undefined,
+            shippingAddressId: undefined,
+            shippingAddress: undefined,
+            cartItems: [],
+            totalPriceInCents: 0,
+            createdAt: undefined,
+            updatedAt: undefined,
+        }
     }
 
     const cart = await db.query.cartTable.findFirst({
         where: (cart, { eq }) => eq(cart.userId, session.user.id),
         with: {
-            shippingAddress: true,
+            shippingAddress:     true,
             cartItems: {
                 with: {
                     productVariant: {
