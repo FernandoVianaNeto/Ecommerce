@@ -11,8 +11,6 @@ import Link from "next/link";
 const Cart = () => {
     const { data: cart } = useCart({});
 
-    console.log(cart);
-
     return (
         <Sheet>
         <SheetTrigger asChild>

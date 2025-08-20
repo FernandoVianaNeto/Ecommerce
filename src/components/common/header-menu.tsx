@@ -23,10 +23,10 @@ const HeaderMenu = () => {
                         Menu
                     </SheetTitle>
                 </SheetHeader>
-                <div className="p-5">
+                <div className="px-5">
                     { session?.user ? (
                         <>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-3">
                                     <Avatar>
                                         <AvatarImage src={session?.user?.image ?? ""} />
@@ -35,7 +35,6 @@ const HeaderMenu = () => {
                                             {session?.user?.name?.split(" ")?.[1]?.[0]}
                                         </AvatarFallback>
                                     </Avatar>
-
                                     <div>
                                         <h3 className="font-semibold">{session?.user?.name}</h3>
                                         <span className="text-muted-foreground block text-xs">
@@ -43,6 +42,14 @@ const HeaderMenu = () => {
                                         </span>
                                     </div>
                                 </div>
+                                <Button
+                                    variant="destructive"
+                                    size="icon"
+                                    className="px-3 py-1.5"
+                                    onClick={() => authClient.signOut()}
+                                >
+                                    <LogOutIcon className="w-4 h-4 text-white" />
+                                </Button>
                             </div>
                         </>
                     ) : (
@@ -58,7 +65,7 @@ const HeaderMenu = () => {
                 </div>
 
                 <div className="px-5">
-                    <Separator className="my-4" />
+                    <Separator className="my-5" />
                 </div>
 
                 <div className="px-5 flex flex-col gap-3 text-muted-foreground text-sm">
@@ -83,33 +90,6 @@ const HeaderMenu = () => {
                         Shopping Cart
                     </Link>
                 </div>
-
-               
-
-                {
-                    session?.user && (
-                        <>
-                            <div className="px-5">
-                                <Separator className="my-4" />
-                            </div>
-                            <div className="px-5 flex items-center justify-between gap-3">
-                                <div className="flex items-center gap-2">
-                                    <LogOutIcon className="w-4 h-4 text-destructive" />
-                                    <span className="font-medium text-destructive">Sair</span>
-                                </div>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    className="px-3 py-1.5"
-                                    onClick={() => authClient.signOut()}
-                                >
-                                    Sair
-                                </Button>
-                            </div>      
-                        </>
-                    )
-                }
-               
             </SheetContent>
         </Sheet>
     )

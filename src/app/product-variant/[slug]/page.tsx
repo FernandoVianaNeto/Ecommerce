@@ -25,8 +25,6 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
     headers: await headers()
   });
 
-  console.log(session);
-  
   const productVariant = await db.query.productVariantTable.findFirst({
       where: eq(productVariantTable.slug, slug),
       with: {
