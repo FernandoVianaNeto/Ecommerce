@@ -34,7 +34,6 @@ const Identification = async () => {
         }
     });
 
-
     const shippingAddresses = await db.query.shippingAddressTable.findMany({
         where: eq(shippingAddressTable.userId, session.user.id),
     })
