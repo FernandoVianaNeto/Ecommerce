@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import AddToCartButton from "./add-to-cart-button";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import BuyNowButton from "./buy-now-button";
 
 interface ProductActionsProps {
     productVariantId: string;
@@ -28,7 +29,7 @@ const ProductActions = ({ productVariantId, session }: ProductActionsProps) => {
                 </div>
             </div>
             <div className="space-y-4 flex flex-col">
-                <Button className="rounded-full" size="lg" variant="outline">Buy now</Button>
+                <BuyNowButton productVariantId={productVariantId} quantity={quantity} redirectToLogin={!session}/>
                 <AddToCartButton productVariantId={productVariantId} quantity={quantity} redirectToLogin={!session}/>
             </div>
         </div>

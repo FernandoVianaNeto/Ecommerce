@@ -93,7 +93,7 @@ const ProductVariantPage = async ({ params }: ProductVariantPageProps) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-16">
+      <div className="max-w-7xl mx-auto sm:px-6 pt-10 lg:pt-16">
         <ProductList 
           title="You may like"
           products={likelyProducts as any}
