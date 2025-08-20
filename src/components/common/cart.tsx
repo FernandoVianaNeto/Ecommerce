@@ -1,14 +1,16 @@
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
-import { ShoppingBasketIcon } from "lucide-react";
+import { Loader2, ShoppingBasketIcon } from "lucide-react";
 import CartItem from "./cart-item";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { formatCentsToBRL } from "@/helpers/money";
 import { useCart } from "@/hooks/queries/use-cart";
 import Link from "next/link";
+import { useState } from "react";
 
 const Cart = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const { data: cart } = useCart({});
 
     return (
@@ -63,9 +65,21 @@ const Cart = () => {
                                 <p className="truncate text-right max-w-[50%]">{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
                             </div>
 
-                            <Button className="rounded-full w-full" asChild>
+                            <Button
+                                className="rounded-full w-full"
+                                asChild
+                                disabled={isLoading}
+                                onClick={() => setIsLoading(true)}
+                            >
                                 <Link href="/cart/identification">
-                                    Buy now
+                                    {isLoading ? (
+                                        <>
+                                            <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                            Buy now
+                                        </>
+                                    ) : (
+                                        "Buy now"
+                                    )}
                                 </Link>
                             </Button>
                         </div>
