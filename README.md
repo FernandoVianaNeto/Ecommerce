@@ -23,8 +23,8 @@ It provides a seamless shopping experience with secure authentication, smooth ch
 - [Node.js](https://nodejs.org/) (version 18 or later recommended)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 - A Google Cloud account for OAuth credentials
-- A payment provider account (e.g., Stripe, PayPal)
-
+- A Stripe payment account
+  
 ### Steps
 
 1. **Clone the repository**
