@@ -41,13 +41,7 @@ yarn install
 ```
 
 3. **Set up environment variables**
-Create a `.env.local` file in the root directory and add the following:
-```env
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-NEXT_PUBLIC_API_URL=http://localhost:5000
-PAYMENT_PROVIDER_KEY=your_payment_provider_key
-```
+Follow the .env.example file provided in the project root
 
 4. **Run the development server**
 ```bash
@@ -60,7 +54,7 @@ yarn dev
 Go to [http://localhost:3000](http://localhost:3000) to see the app in action.
 
 ## 🚀 Deployment
-You can deploy the frontend easily to [Vercel](https://vercel.com/) and host the backend on services like [Heroku](https://www.heroku.com/), [Render](https://render.com/), or [Railway](https://railway.app/).
+The application was deployed at Vercel.
 
 ---
 **Tagline:** _"A modern, Google-login-powered e-commerce with secure checkout and mobile-first design."_
