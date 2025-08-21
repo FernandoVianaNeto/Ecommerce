@@ -22,7 +22,6 @@ import { shippingAddressTable } from "@/db/schema";
 import { useRouter } from "next/navigation";
 import FinishOrderButton from "./finish-order-button";
 
-
 type AddressFormData = z.infer<typeof createShippingAddressSchema>;
 
 interface AddressesProps {
@@ -36,7 +35,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
     const router = useRouter();
     
     const { data: addresses, isLoading: addressesLoading } = useShippingAddresses({ initialData: shippingAddresses });
-    const { data: cart } = useCart({});
     
     const form = useForm<AddressFormData>({
         resolver: zodResolver(createShippingAddressSchema),
@@ -56,7 +54,6 @@ const Addresses = ({ shippingAddresses, defaultShippingAddressId }: AddressesPro
 
     const { mutate, isPending } = useCreateShippingAddress();
     const { mutate: updateShippingAddress, isPending: isUpdating } = useUpdateCartShippingAddress();
-    const { mutate: finishOrder, isPending: isFinishingOrder } = useFinishOrder();
 
     const onSubmit = (data: AddressFormData) => {
         if (selectedAddress === "add_new") {

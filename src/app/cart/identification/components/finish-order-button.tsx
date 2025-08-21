@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface FinishOrderButtonProps {
     isUpdating: boolean;
@@ -14,7 +15,10 @@ const FinishOrderButton = ({ isUpdating, onClick }: FinishOrderButtonProps) => {
             disabled={isUpdating}
             onClick={onClick}
         >
-            {isUpdating ? "Going to payment..." : "Go to payment"}
+            {isUpdating ? <>
+                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                "Go to payment"
+            </> : "Go to payment"}
         </Button>
     )
 }
