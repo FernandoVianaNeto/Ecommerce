@@ -14,8 +14,8 @@ It provides a seamless shopping experience with secure authentication, smooth ch
 - **Frontend:** Next.js, React, TypeScript
 - **Backend:** Node.js
 - **Authentication:** Google OAuth
-- **Payments:** [Insert payment provider, e.g., Stripe or PayPal]
-- **Styling:** [Insert styling library/framework, e.g., Tailwind CSS or Styled Components]
+- **Payments:**Stripe
+- **Styling:** Tailwind CSS
 
 ## 📦 Installation
 
